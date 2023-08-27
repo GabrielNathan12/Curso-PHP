@@ -68,19 +68,28 @@
         public function setToken($token){
             $this->token = $token;
         }
+
+        public function generateToken(){
+            return bin2hex(random_bytes(50));
+        }
+        
+        public function generatePassword($password){
+            return password_hash($password, PASSWORD_DEFAULT);
+        }
         
     }
 
     interface UserDaoInterface {
         public function buildUser(User $user);
         public function create(User $user, $authUser = false);
-        public function updade(User $user);
+        public function updade(User $user, $redirect = true);
         public function verifyToken($protected = false);
         public function setTokenToSession($token, $redirect = true);
         public function authenticateUser($email, $password);
         public function findByEmail($email);
         public function findById($id);
         public function findByToken($token);
+        public function destroyToken();
         public function changePassword(User $user);
 
     }

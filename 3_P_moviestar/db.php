@@ -5,8 +5,8 @@
     $db_pass = 'welcome1';
 
 
-    $conecao = new PDO('pgsql:dbname='.$db_name .';host='.$db_host, $db_user, $db_pass);
+    $conexao = new PDO('pgsql:dbname='.$db_name .';host='.$db_host, $db_user, $db_pass);
 
 
-    $conecao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $conecao->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conexao->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
