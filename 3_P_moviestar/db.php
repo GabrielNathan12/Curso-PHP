@@ -2,7 +2,7 @@
     $db_name = 'moviestar';
     $db_host = 'localhost';
     $db_user = 'postgres';
-    $db_pass = 'welcome1';
+    $db_pass = 'postgress';
 
 
     $conexao = new PDO('pgsql:dbname='.$db_name .';host='.$db_host, $db_user, $db_pass);
