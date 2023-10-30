@@ -59,6 +59,17 @@
         else{
             $message->setMessage("É preciso adicionar um título, descrição e uma categoria!", "error", "back");
         }
+    }else if($type === "delete"){
+        $id = filter_input(INPUT_POST, "id");
+        $movie = $movieDAO->findById($id);
+
+        if($movie){
+            if($movie->users_id === $userData->id){
+                $movieDAO->destroy($movie->id);
+            }else{
+                $message->setMessage("Informações incorretas!", "error", "index.php"); 
+            }
+        }
     }
     else{
         $message->setMessage("Informações incorretas!", "error", "index.php");
