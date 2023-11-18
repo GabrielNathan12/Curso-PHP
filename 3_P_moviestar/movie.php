@@ -3,12 +3,14 @@
 
     require_once("models/Movie.php");
     require_once("dao/MovieDAO.php");
+    require_once("dao/ReviewDAO.php");
 
     $id = filter_input(INPUT_GET, "id");
 
     $movies;
 
     $movieDAO = new MovieDAO($conexao , $BASE_URL);
+    $reviewDAO = new ReviewDAO($conexao , $BASE_URL);
 
     if(empty($id)){
         $message->setMessage("Filme não encontrado!", "error", "index.php");
@@ -20,18 +22,24 @@
         }
     }
 
+    if($movie->image == ""){
+        $movie->image = "movie_cover.jpeg";
+    }
 
     $userownsMovie = false;
-    $alreadyReviewd = false;
+    
     if(!empty($userData)){
         if($userData->id === $movie->users_id){
             $userownsMovie = true;
         }
+        $alreadyReviewd = $reviewDAO->hashAlreadyReviewed($id, $userData->id);
     }
+   
 
-    if($movie->image == ""){
-        $movie->image = "movie_cover.jpeg";
-    }
+
+
+    $movieReviews = $reviewDAO->getMoviesReview($id);
+
 ?>
 
 <div id="main-container" class="container-fluid">
@@ -43,7 +51,7 @@
                 <span class="pipe"></span>
                 <span><?= $movie->category ?></span>
                 <span class="pipe"></span>
-                <span><i class="fas fa-star"></i> 0</span>
+                <span><i class="fas fa-star"></i> <?= $movie->rating ?></span>
             </p>
             <iframe src="<?= $movie->trailer ?>" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encryted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             <p><?= $movie->description ?></p>
@@ -88,25 +96,12 @@
                 </div>
             <?php endif; ?>
 
-            <div class="col-md-12 review">
-                <div class="row">
-                    <div class="col-md-1">
-                        <div class="profile-image-container review-image" style="background-image: url('<?= $BASE_URL ?>img/users/user.png');"></div>
-                    </div>
-                    <div class="author-name-details-container">
-                        <h4 class="author-name">
-                            <a href="#">Gabriel</a>
-                        </h4>
-                        <p>
-                            <i class="fas fa-star"></i> 9
-                        </p>
-                    </div>
-                    <div class="col-md-12">
-                        <p class="comment-title">Comentário</p>
-                        <p>Comentários</p>
-                    </div>
-                </div>
-            </div>
+            <?php foreach ($movieReviews as $review): ?>
+                <?php require("templates/user_review.php"); ?>
+            <?php endforeach; ?>
+            <?php if(count($movieReviews) == 0): ?>
+                <p class="empty-list">Ainda não há comentários ...</p>
+            <?php endif;?>
         </div>
     </div>
 </div>
